@@ -22,6 +22,25 @@ public class UserObject {
     @Column (name = "token")
     private String token;
 
+    @Column (name ="first_Login")
+    private int firstLogIn ;
+
+
+
+    public UserObject (String username , String password ,String token){
+        this.username= username;
+        this.password= password;
+        this.token = token;
+        this.firstLogIn = 0 ;
+    }
+
+    public UserObject (UserObject userObject){
+        this.userId = userObject.getId();
+        this.username = userObject.getUsername();
+        this.password = userObject.getPassword();
+        this.token = userObject.getToken();
+        //this.firstLogIn = userObject.getFirstLogIn();
+    }
     //one user can have access to many organizations
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
