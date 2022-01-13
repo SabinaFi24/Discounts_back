@@ -2,6 +2,8 @@ package com.dev.objects;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table (name = "sales")
@@ -12,28 +14,34 @@ public class SaleObject {
     @Column (name = "id")
     private int SaleId;
 
-    @ManyToOne
-    @JoinColumn (name = "store_id")
-    private StoreObject storeObject;
-
-    @Column (name = "start-date")
+    @Column (name = "start_Date")
     private Date startDate;
 
-    @Column (name = "end-date")
+    @Column (name = "end_Date")
     private Date endDate;
 
     @Column (name = "content")
     private String content;
 
-    @Column (name = "is-forall")
+    @Column (name = "is_For_All")
     private boolean isForAll;
+
+    @ManyToMany
+    @JoinTable (name = "Organizations_Sales", joinColumns = {@JoinColumn(name="saleId")},
+            inverseJoinColumns = {@JoinColumn(name = "organizationId")})
+    Set<OrganizationObject> Organizations = new HashSet<>();
 
     //getters and setters:
     public int getSaleId() {return SaleId;}
     public void setSaleId(int saleId) {SaleId = saleId;}
 
-    public StoreObject getStore() {return storeObject;}
-    public void setStore(StoreObject storeObject) {this.storeObject = storeObject;}
+    public Set<OrganizationObject> getOrganizations() {
+        return Organizations;
+    }
+
+    public void setOrganizations(Set<OrganizationObject> organizations) {
+        Organizations = organizations;
+    }
 
     public Date getStartDate() {return startDate;}
     public void setStartDate(Date startDate) {this.startDate = startDate;}

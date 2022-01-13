@@ -1,7 +1,9 @@
 package com.dev.objects;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -9,7 +11,7 @@ public class UserObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "id")
-    public int id;
+    public int userId;
 
     @Column (name = "username")
     private String username;
@@ -19,6 +21,14 @@ public class UserObject {
 
     @Column (name = "token")
     private String token;
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "Users_Organizations",
+            joinColumns = { @JoinColumn(name = "userId") },
+            inverseJoinColumns = { @JoinColumn(name = "organizationId") }
+    )
+    Set<OrganizationObject> organization = new HashSet<>();
 
     @Transient
     private List<OrganizationObject> organizations;
@@ -54,10 +64,10 @@ public class UserObject {
     }
 
     public int getId() {
-        return id;
+        return userId;
     }
     public void setId(int id) {
-        this.id = id;
+        this.userId = userId;
     }
     //end of getters and setters
 
