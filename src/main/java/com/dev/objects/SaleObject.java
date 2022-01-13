@@ -31,6 +31,10 @@ public class SaleObject {
             inverseJoinColumns = {@JoinColumn(name = "organizationId")})
     Set<OrganizationObject> Organizations = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name="store_Sale")
+    private StoreObject store;
+
     //getters and setters:
     public int getSaleId() {return SaleId;}
     public void setSaleId(int saleId) {SaleId = saleId;}
