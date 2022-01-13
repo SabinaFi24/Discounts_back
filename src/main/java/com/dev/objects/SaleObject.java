@@ -5,7 +5,7 @@ import java.util.Date;
 
 @Entity
 @Table (name = "sales")
-public class Sales {
+public class SaleObject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,8 +13,8 @@ public class Sales {
     private int SaleId;
 
     @ManyToOne
-    @JoinColumn (name = "organization_id")
-    private Organization organization;
+    @JoinColumn (name = "store_id")
+    private StoreObject storeObject;
 
     @Column (name = "start-date")
     private Date startDate;
@@ -32,8 +32,8 @@ public class Sales {
     public int getSaleId() {return SaleId;}
     public void setSaleId(int saleId) {SaleId = saleId;}
 
-    public Organization getOrganization() {return organization;}
-    public void setOrganization(Organization organization) {this.organization = organization;}
+    public StoreObject getStore() {return storeObject;}
+    public void setStore(StoreObject storeObject) {this.storeObject = storeObject;}
 
     public Date getStartDate() {return startDate;}
     public void setStartDate(Date startDate) {this.startDate = startDate;}

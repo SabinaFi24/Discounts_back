@@ -21,7 +21,7 @@ public class UserObject {
     private String token;
 
     @Transient
-    private List<Organization> organizations;
+    private List<OrganizationObject> organizations;
 
     //getters and setters:
     public String getUsername() {
@@ -46,10 +46,10 @@ public class UserObject {
     }
 
 
-    public List<Organization> organizations() {
+    public List<OrganizationObject> organizations() {
         return organizations;
     }
-    public void setOrganizations(List<Organization> organizations) {
+    public void setOrganizations(List<OrganizationObject> organizations) {
         this.organizations = organizations;
     }
 

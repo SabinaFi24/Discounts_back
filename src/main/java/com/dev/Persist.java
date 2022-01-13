@@ -1,6 +1,7 @@
 package com.dev;
 
-import com.dev.objects.PostObject;
+import com.dev.objects.OrganizationObject;
+import com.dev.objects.StoreObject;
 import com.dev.objects.UserObject;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -62,7 +63,7 @@ public class Persist {
         return success;
     }
 
-    public Integer addPost (String token, String content) {
+    /*public Integer addPost (String token, String content) {
         Integer id=null;
         boolean success = false;
         Integer userId = getUserIdByToken(token);
@@ -82,7 +83,7 @@ public class Persist {
             id=postObject.getId();
         }
         return id;
-    }
+    }*/
 
     public Integer getUserIdByToken (String token) {
         Integer id = null;
@@ -98,17 +99,40 @@ public class Persist {
 
     }
 
-    public List<PostObject> getPostsByUser (String token) {
-        List<PostObject> postObjects = null;
+    public List<OrganizationObject> getAllOrganizations (String token) {
+        List<OrganizationObject> OrganizationObjects = null;
         Session session = sessionFactory.openSession();
-        postObjects = (List<PostObject>)session.createQuery(
-                "FROM PostObject " +
-                        "WHERE userObject.token = :token " +
+        OrganizationObjects = (List<OrganizationObject>)session.createQuery( "SELECT * FROM OrganizationObject").list();
+        session.close();
+        return OrganizationObjects;
+    }
+
+    //all the organizations that the user is friend in:
+    public List<OrganizationObject> getOrganizationByUser (String token) {
+        List<OrganizationObject> OrganizationObjects = null;
+        Session session = sessionFactory.openSession();
+        OrganizationObjects = (List<OrganizationObject>)session.createQuery(
+                "FROM OrganizationObject " +
+                        "WHERE UserObject.token = :token " +
                         "ORDER BY id DESC ")
                 .setParameter("token", token)
                 .list();
         session.close();
-        return postObjects;
+        return OrganizationObjects;
+    }
+
+    //all the Stores that the organizations the user is friend in is working with
+    public List<StoreObject> getStoreByUser (String token) {
+        List<StoreObject> storeObjects = null;
+        Session session = sessionFactory.openSession();
+        storeObjects = (List<StoreObject>)session.createQuery(
+                        "FROM StoreObject " +
+                                "WHERE UserObject.token = :token " +
+                                "ORDER BY id DESC ")
+                .setParameter("token", token)
+                .list();
+        session.close();
+        return storeObjects;
     }
 
     public boolean removePost (String token, int postId) {

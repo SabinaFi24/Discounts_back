@@ -1,7 +1,8 @@
 package com.dev.controllers;
 
 import com.dev.Persist;
-import com.dev.objects.PostObject;
+import com.dev.objects.OrganizationObject;
+import com.dev.objects.StoreObject;
 import com.dev.objects.UserObject;
 import com.dev.utils.FileBrowserUtil;
 import com.dev.utils.Utils;
@@ -59,7 +60,7 @@ public class TestController {
     }
 
 
-    @RequestMapping(value = "/add-post", headers = "content-type=multipart/*", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/add-post", headers = "content-type=multipart/*", method = RequestMethod.POST)
     public boolean addPost (@RequestParam(value = "file", required = false) MultipartFile multipartFile, String token, String content) {
         Integer postId = persist.addPost(token, content);
         if (multipartFile != null && postId != null) {
@@ -72,12 +73,17 @@ public class TestController {
 
         }
         return postId != null;
+    }*/
+
+
+    @RequestMapping("get-stores")
+    public List<StoreObject> getStore (String token) {
+        return persist.getStoresByUser(token);
     }
 
-
-    @RequestMapping("get-posts")
-    public List<PostObject> getPosts (String token) {
-        return persist.getPostsByUser(token);
+    @RequestMapping("get-stores")
+    public List<OrganizationObject> getOrganization (String token) {
+        return persist.getOrganizationByUser(token);
     }
 
     @RequestMapping("remove-post")
