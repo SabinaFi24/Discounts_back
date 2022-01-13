@@ -16,12 +16,13 @@ import java.util.Set;
         @Column (name = "name")
         private String name;
 
-
+        //organizations can be available to many users
         @ManyToMany
         @JoinTable (name = "Users_Organizations", joinColumns = {@JoinColumn(name="organizationId")},
                 inverseJoinColumns = {@JoinColumn(name = "userId")})
         Set<UserObject> users = new HashSet<>();
 
+         //organizations can have many sales that available them through stores
          @ManyToMany
          @JoinTable (name = "Organizations_Sales", joinColumns = {@JoinColumn(name="organizationId")},
             inverseJoinColumns = {@JoinColumn(name = "saleId")})

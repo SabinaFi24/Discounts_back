@@ -26,6 +26,8 @@ public class SaleObject {
     @Column (name = "is_For_All")
     private boolean isForAll;
 
+    //various sales can be linked to several organizations
+    //in one store there can be different sales to different stores
     @ManyToMany
     @JoinTable (name = "Organizations_Sales", joinColumns = {@JoinColumn(name="saleId")},
             inverseJoinColumns = {@JoinColumn(name = "organizationId")})
