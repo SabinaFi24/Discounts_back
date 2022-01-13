@@ -1,6 +1,7 @@
 package com.dev;
 
 import com.dev.objects.OrganizationObject;
+import com.dev.objects.SaleObject;
 import com.dev.objects.StoreObject;
 import com.dev.objects.UserObject;
 import org.hibernate.Session;
@@ -57,13 +58,130 @@ public class Persist {
         session.saveOrUpdate(userObject);
         transaction.commit();
         session.close();
-        if (userObject.getId() > 0) {
+        if (userObject.getUserId() > 0) {
             success = true;
         }
         return success;
     }
 
-    /*public Integer addPost (String token, String content) {
+
+    public Integer getUserIdByToken (String token) {
+        Integer id = null;
+        Session session = sessionFactory.openSession();
+        UserObject userObject = (UserObject) session.createQuery("FROM UserObject WHERE token = :token")
+                .setParameter("token", token)
+                .uniqueResult();
+        session.close();
+        if (userObject != null) {
+            id = userObject.getUserId();
+        }
+        return id;
+
+    }
+    //related to ORGANIZATIONS:
+    public List<OrganizationObject> getAllOrganizations (String token) {
+        List<OrganizationObject> OrganizationObjects = null;
+        Session session = sessionFactory.openSession();
+        OrganizationObjects = (List<OrganizationObject>)session.createQuery( "FROM OrganizationObject").list();
+        session.close();
+        return OrganizationObjects;
+    }
+
+    //all the organizations that the user is friend in:
+    public List<OrganizationObject> getOrganizationByUser (String token) {
+        List<OrganizationObject> OrganizationObjects = null;
+        Session session = sessionFactory.openSession();
+        OrganizationObjects = (List<OrganizationObject>)session.createQuery(
+                "FROM OrganizationObject " +
+                        "WHERE UserObject.token = :token " +
+                        "ORDER BY id DESC ")
+                .setParameter("token", token)
+                .list();
+        session.close();
+        return OrganizationObjects;
+    }
+    //end of organizations.
+
+    //related to STORE:
+    //all the Stores that exist
+    public List<StoreObject> getAllStores (String token) {
+        List<StoreObject> storeObjects = null;
+        Session session = sessionFactory.openSession();
+        storeObjects = (List<StoreObject>)session.createQuery(
+                        "FROM StoreObject " +
+                                "WHERE UserObject.token = :token " +
+                                "ORDER BY id DESC ")
+                .setParameter("token", token)
+                .list();
+        session.close();
+        return storeObjects;
+    }
+
+    public List<StoreObject> getStoresByOrganization(int organizationId) {
+        List<StoreObject> storesObjects = null;
+        Session session = sessionFactory.openSession();
+        storesObjects = (List<StoreObject>)session.createQuery(
+                        "FROM StoreObject " +
+                                "WHERE OrganizationObject.OrganizationId = :organizationId " +
+                                "ORDER BY id DESC ")
+                .setParameter("organizationId", organizationId)
+                .list();
+        session.close();
+        return storesObjects;
+    }
+    //end of store.
+
+    //related to SALE:
+    public List<SaleObject> getSalesByUser(String token) {
+        List<SaleObject> saleObjects = null;
+        Session session = sessionFactory.openSession();
+        saleObjects = (List<SaleObject>)session.createQuery(
+                        "FROM SaleObject " +
+                                "WHERE UserObject.token = :token " +
+                                "ORDER BY id DESC ")
+                .setParameter("token", token)
+                .list();
+        session.close();
+        return saleObjects;
+    }
+    //check if it's make sense:
+    public List<SaleObject> getSaleByStore(int storeId) {
+        List<SaleObject> saleObjects = null;
+        Session session = sessionFactory.openSession();
+        saleObjects = (List<SaleObject>)session.createQuery(
+                        "FROM SaleObject " +
+                                "WHERE SaleObject.store.storeId = :storeId " +
+                                "ORDER BY id DESC ")
+                .setParameter("storeId", storeId)
+                .list();
+        session.close();
+        return saleObjects;
+    }
+    //end of sale.
+
+
+
+/*
+    public boolean removePost (String token, int postId) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.createQuery("DELETE FROM PostObject WHERE id = :id AND userObject.token = :token")
+                .setParameter("id", postId)
+                .setParameter("token", token)
+                .executeUpdate();
+        transaction.commit();
+        session.close();
+        return true;
+    }
+    public List<UserObject> getFollowed(String token){
+        Session session = sessionFactory.openSession();
+        List<UserObject> userObjects = (List<UserObject>) session.createQuery(
+                "SELECT f.followed FROM FollowsRelations f WHERE f.following.token= :token")
+                .setParameter("token",token).list();
+        session.close();
+        return userObjects;
+    }
+    public Integer addPost (String token, String content) {
         Integer id=null;
         boolean success = false;
         Integer userId = getUserIdByToken(token);
@@ -84,74 +202,4 @@ public class Persist {
         }
         return id;
     }*/
-
-    public Integer getUserIdByToken (String token) {
-        Integer id = null;
-        Session session = sessionFactory.openSession();
-        UserObject userObject = (UserObject) session.createQuery("FROM UserObject WHERE token = :token")
-                .setParameter("token", token)
-                .uniqueResult();
-        session.close();
-        if (userObject != null) {
-            id = userObject.getId();
-        }
-        return id;
-
-    }
-
-    public List<OrganizationObject> getAllOrganizations (String token) {
-        List<OrganizationObject> OrganizationObjects = null;
-        Session session = sessionFactory.openSession();
-        OrganizationObjects = (List<OrganizationObject>)session.createQuery( "SELECT * FROM OrganizationObject").list();
-        session.close();
-        return OrganizationObjects;
-    }
-
-    //all the organizations that the user is friend in:
-    public List<OrganizationObject> getOrganizationByUser (String token) {
-        List<OrganizationObject> OrganizationObjects = null;
-        Session session = sessionFactory.openSession();
-        OrganizationObjects = (List<OrganizationObject>)session.createQuery(
-                "FROM OrganizationObject " +
-                        "WHERE UserObject.token = :token " +
-                        "ORDER BY id DESC ")
-                .setParameter("token", token)
-                .list();
-        session.close();
-        return OrganizationObjects;
-    }
-
-    //all the Stores that the organizations the user is friend in is working with
-    public List<StoreObject> getStoreByUser (String token) {
-        List<StoreObject> storeObjects = null;
-        Session session = sessionFactory.openSession();
-        storeObjects = (List<StoreObject>)session.createQuery(
-                        "FROM StoreObject " +
-                                "WHERE UserObject.token = :token " +
-                                "ORDER BY id DESC ")
-                .setParameter("token", token)
-                .list();
-        session.close();
-        return storeObjects;
-    }
-
-    public boolean removePost (String token, int postId) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.createQuery("DELETE FROM PostObject WHERE id = :id AND userObject.token = :token")
-                .setParameter("id", postId)
-                .setParameter("token", token)
-                .executeUpdate();
-        transaction.commit();
-        session.close();
-        return true;
-    }
-    public List<UserObject> getFollowed(String token){
-        Session session = sessionFactory.openSession();
-        List<UserObject> userObjects = (List<UserObject>) session.createQuery(
-                "SELECT f.followed FROM FollowsRelations f WHERE f.following.token= :token")
-                .setParameter("token",token).list();
-        session.close();
-        return userObjects;
-    }
 }

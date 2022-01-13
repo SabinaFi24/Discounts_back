@@ -2,6 +2,7 @@ package com.dev.controllers;
 
 import com.dev.Persist;
 import com.dev.objects.OrganizationObject;
+import com.dev.objects.SaleObject;
 import com.dev.objects.StoreObject;
 import com.dev.objects.UserObject;
 import com.dev.utils.FileBrowserUtil;
@@ -51,6 +52,7 @@ public class TestController {
             UserObject userObject = new UserObject();
             userObject.setUsername(username);
             userObject.setPassword(password);
+            userObject.setFirstLogIn(0);
             String hash = Utils.createHash(username, password);
             userObject.setToken(hash);
             success = persist.addAccount(userObject);
@@ -59,8 +61,34 @@ public class TestController {
         return success;
     }
 
+    //related to organization:
+    @RequestMapping("get-stores")
+    public List<OrganizationObject> getOrganization (String token) {
+        return persist.getOrganizationByUser(token);
+    }
 
-    /*@RequestMapping(value = "/add-post", headers = "content-type=multipart/*", method = RequestMethod.POST)
+    //related to store:
+    @RequestMapping("get-stores")
+    public List<StoreObject> getStoresByOrganization (int organizationId) {return persist.getStoresByOrganization(organizationId);}
+    public List<StoreObject> getAllStores (String token) {return persist.getAllStores(token);}
+
+    //related to sale:
+    @RequestMapping("get-saless")
+    public List<SaleObject> getSalesByUser (String token) {
+        return persist.getSalesByUser(token);
+    }
+    public List<SaleObject> getSaleByStore (int storeId) {
+        return persist.getSaleByStore(storeId);
+    }
+
+
+
+
+
+
+    /* irrelevant by now:
+
+    @RequestMapping(value = "/add-post", headers = "content-type=multipart/*", method = RequestMethod.POST)
     public boolean addPost (@RequestParam(value = "file", required = false) MultipartFile multipartFile, String token, String content) {
         Integer postId = persist.addPost(token, content);
         if (multipartFile != null && postId != null) {
@@ -73,19 +101,7 @@ public class TestController {
 
         }
         return postId != null;
-    }*/
-
-
-    @RequestMapping("get-stores")
-    public List<StoreObject> getStore (String token) {
-        return persist.getStoresByUser(token);
     }
-
-    @RequestMapping("get-stores")
-    public List<OrganizationObject> getOrganization (String token) {
-        return persist.getOrganizationByUser(token);
-    }
-
     @RequestMapping("remove-post")
     public boolean removePost (String token, int postId) {
         return persist.removePost(token, postId);
@@ -118,7 +134,7 @@ public class TestController {
     public List<UserObject> getFollowed (String token) {
        return persist.getFollowed(token);
 
-    }
+    }*/
 
 
 

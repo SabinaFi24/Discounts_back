@@ -60,5 +60,9 @@ public class SaleObject {
 
     public boolean isForAll() {return isForAll;}
     public void setForAll(boolean forAll) {isForAll = forAll;}
+
+    public StoreObject getStore() {return store;}
+    public void setStore(StoreObject store) {this.store = store;}
+
     //end of getters and setters
 }

@@ -26,21 +26,6 @@ public class UserObject {
     private int firstLogIn ;
 
 
-
-    public UserObject (String username , String password ,String token){
-        this.username= username;
-        this.password= password;
-        this.token = token;
-        this.firstLogIn = 0 ;
-    }
-
-    public UserObject (UserObject userObject){
-        this.userId = userObject.getId();
-        this.username = userObject.getUsername();
-        this.password = userObject.getPassword();
-        this.token = userObject.getToken();
-        //this.firstLogIn = userObject.getFirstLogIn();
-    }
     //one user can have access to many organizations
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
@@ -50,8 +35,7 @@ public class UserObject {
     )
     Set<OrganizationObject> organization = new HashSet<>();
 
-    @Transient
-    private List<OrganizationObject> organizations;
+
 
     //getters and setters:
     public String getUsername() {return username;}
@@ -63,12 +47,16 @@ public class UserObject {
     public String getToken() {return token;}
     public void setToken(String token) {this.token = token;}
 
-    public List<OrganizationObject> organizations() {return organizations;}
-    public void setOrganizations(List<OrganizationObject> organizations) {this.organizations = organizations;}
+    public int getUserId() {return userId;}
+    public void setUserId(int userId) {this.userId = userId;}
 
-    public int getId() {return userId;}
-    public void setId(int id) {this.userId = userId;}
-    //end of getters and setters
+    public int getFirstLogIn() {return firstLogIn;}
+    public void setFirstLogIn(int firstLogIn) {this.firstLogIn = firstLogIn;}
+
+    public Set<OrganizationObject> getOrganization() {return organization;}
+    public void setOrganization(Set<OrganizationObject> organization) {this.organization = organization;}
+
+//end of getters and setters
 
 
 }
