@@ -22,7 +22,7 @@ public class UserObject {
     @Column (name = "token")
     private String token;
 
-    @Column (name ="first_Login")
+    @Column (name ="firstLogin")
     private int firstLogIn ;
 
 

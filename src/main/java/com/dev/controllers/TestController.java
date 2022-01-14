@@ -43,6 +43,10 @@ public class TestController {
         String token = persist.getTokenByUsernameAndPassword(username, password);
         return token;
     }
+    @RequestMapping("first-sign-in")
+    public int firstSignIn (String username, String password) {
+        return persist.isFirstSignIn(username, password);
+    }
 
     @RequestMapping("create-account")
     public boolean createAccount (String username, String password) {
@@ -68,15 +72,17 @@ public class TestController {
     }
 
     //related to store:
-    @RequestMapping("get-stores")
+    @RequestMapping("get-stores-by-organization")
     public List<StoreObject> getStoresByOrganization (int organizationId) {return persist.getStoresByOrganization(organizationId);}
+    @RequestMapping("get-all-stores")
     public List<StoreObject> getAllStores (String token) {return persist.getAllStores(token);}
 
     //related to sale:
-    @RequestMapping("get-saless")
+    @RequestMapping("get-sales-by-user")
     public List<SaleObject> getSalesByUser (String token) {
         return persist.getSalesByUser(token);
     }
+    @RequestMapping("get-all-sales")
     public List<SaleObject> getSaleByStore (int storeId) {
         return persist.getSaleByStore(storeId);
     }
