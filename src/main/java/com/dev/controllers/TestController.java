@@ -47,6 +47,11 @@ public class TestController {
     public boolean firstSignIn (String token){
         return persist.isFirstSignIn(token);
     }
+    @RequestMapping(value = "after-first-sign-in",method = RequestMethod.POST )
+    public void afterFirstSignIn (@RequestParam String token){
+        persist.afterFirstSignIn(token);
+    }
+
 
     @RequestMapping("create-account")
     public boolean createAccount (String username, String password) {

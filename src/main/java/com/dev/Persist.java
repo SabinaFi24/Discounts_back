@@ -72,6 +72,16 @@ public class Persist {
             return false;
         }
     }
+    public void afterFirstSignIn(String token) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        UserObject userObject = getUserByToken(token);
+        int firstLogin = userObject.getFirstLogIn()+1;
+        userObject.setFirstLogIn(firstLogin);
+        session.saveOrUpdate(userObject);
+        transaction.commit();
+        session.close();
+    }
 
     public Integer getUserIdByToken (String token) {
         Integer id = null;
@@ -173,8 +183,6 @@ public class Persist {
         session.close();
         return saleObjects;
     }
-
-
     //end of sale.
 
 
