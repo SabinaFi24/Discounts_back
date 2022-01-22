@@ -56,7 +56,7 @@ public class TestController {
     @RequestMapping("create-account")
     public boolean createAccount (String username, String password) {
         boolean success = false;
-        boolean alreadyExists = persist.getTokenByUsernameAndPassword(username, password) != null;
+        boolean alreadyExists = persist.getTokenByUsername(username) != null;
         if (!alreadyExists) {
             UserObject userObject = new UserObject();
             userObject.setUsername(username);
@@ -71,10 +71,11 @@ public class TestController {
     }
 
     //related to organization:
-    @RequestMapping("get-stores")
-    public List<OrganizationObject> getOrganization (String token) {
-        return persist.getOrganizationByUser(token);
-    }
+    @RequestMapping("get-all-organizations")
+    public List<OrganizationObject> getAllOrganization() {return persist.getAllOrganizations();}
+
+    @RequestMapping("get-organizations-by-user")
+    public List<OrganizationObject> getOrganizationByUser (String token) {return persist.getOrganizationByUser(token);}
 
     //related to store:
     @RequestMapping("get-stores-by-organization")

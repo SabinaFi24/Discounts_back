@@ -26,15 +26,6 @@ public class UserObject {
     private int firstLogIn ;
 
 
-    //one user can have access to many organizations
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "Users_Organizations",
-            joinColumns = { @JoinColumn(name = "userId") },
-            inverseJoinColumns = { @JoinColumn(name = "organizationId") }
-    )
-    Set<OrganizationObject> organization = new HashSet<>();
-
     //getters and setters:
     public String getUsername() {return username;}
     public void setUsername(String username) {this.username = username;}
@@ -51,10 +42,7 @@ public class UserObject {
     public int getFirstLogIn() {return firstLogIn;}
     public void setFirstLogIn(int firstLogIn) {this.firstLogIn = firstLogIn;}
 
-    public Set<OrganizationObject> getOrganization() {return organization;}
-    public void setOrganization(Set<OrganizationObject> organization) {this.organization = organization;}
-
-//end of getters and setters
+    //end of getters and setters
 
 
 }

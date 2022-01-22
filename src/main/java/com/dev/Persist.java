@@ -50,6 +50,18 @@ public class Persist {
         }
         return token;
     }
+    public String getTokenByUsername(String username) {
+        String token = null;
+        Session session = sessionFactory.openSession();
+        UserObject userObject = (UserObject) session.createQuery("FROM UserObject WHERE username = :username")
+                .setParameter("username", username)
+                .uniqueResult();
+        session.close();
+        if (userObject != null) {
+            token = userObject.getToken();
+        }
+        return token;
+    }
 
     public boolean addAccount (UserObject userObject) {
         boolean success = false;
@@ -104,8 +116,10 @@ public class Persist {
         session.close();
         return userObject;
     }
+
     //related to ORGANIZATIONS:
-    public List<OrganizationObject> getAllOrganizations (String token) {
+    // get all organizations:
+    public List<OrganizationObject> getAllOrganizations () {
         List<OrganizationObject> OrganizationObjects = null;
         Session session = sessionFactory.openSession();
         OrganizationObjects = (List<OrganizationObject>)session.createQuery( "FROM OrganizationObject").list();
@@ -113,15 +127,12 @@ public class Persist {
         return OrganizationObjects;
     }
 
-    //all the organizations that the user is friend in:
+    //get organizations by user:
     public List<OrganizationObject> getOrganizationByUser (String token) {
         List<OrganizationObject> OrganizationObjects = null;
         Session session = sessionFactory.openSession();
-        OrganizationObjects = (List<OrganizationObject>)session.createQuery(
-                "FROM OrganizationObject " +
-                        "WHERE UserObject.token = :token " +
-                        "ORDER BY id DESC ")
-                .setParameter("token", token)
+        OrganizationObjects = session.createQuery("SELECT organizations FROM UserOrganizations WHERE UserObject.userId = :userId")
+                .setParameter("userId",getUserByToken(token).getUserId())
                 .list();
         session.close();
         return OrganizationObjects;
@@ -129,8 +140,12 @@ public class Persist {
     //end of organizations.
 
     //related to STORE:
+    public List<StoreObject> getAllStores (){
+        return sessionFactory.openSession().createQuery("FROM StoreObject ").list();
+
+    }
     //all the Stores that exist
-    public List<StoreObject> getAllStores (String token) {
+    public List<StoreObject> getStoresByUser (String token) {
         List<StoreObject> storeObjects = null;
         Session session = sessionFactory.openSession();
         storeObjects = (List<StoreObject>)session.createQuery(
