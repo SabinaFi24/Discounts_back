@@ -63,20 +63,15 @@ public class Persist {
         }
         return success;
     }
-    public int isFirstSignIn(String username, String password) {
-        int numOfSingIn = 0;
-        Session session = sessionFactory.openSession();
-        UserObject userObject = (UserObject) session.createQuery( "FROM UserObject WHERE username = :username AND password = :password")
-                .setParameter("username", username)
-                .setParameter("password", password)
-                .uniqueResult();
-        session.close();
-        if (userObject != null) {
-            numOfSingIn = userObject.getFirstLogIn();
-        }
-        return numOfSingIn;
-    }
 
+    public boolean isFirstSignIn(String token) {
+        UserObject userObject = getUserByToken(token);
+        if (userObject.getFirstLogIn() == 0) {;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public Integer getUserIdByToken (String token) {
         Integer id = null;
@@ -90,6 +85,14 @@ public class Persist {
         }
         return id;
 
+    }
+    public UserObject getUserByToken (String token ){
+        Session session = sessionFactory.openSession();
+        UserObject userObject = (UserObject) session.createQuery("FROM UserObject u WHERE u.token = :token")
+                .setParameter("token",token)
+                .uniqueResult();
+        session.close();
+        return userObject;
     }
     //related to ORGANIZATIONS:
     public List<OrganizationObject> getAllOrganizations (String token) {

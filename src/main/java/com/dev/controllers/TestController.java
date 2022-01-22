@@ -44,8 +44,8 @@ public class TestController {
         return token;
     }
     @RequestMapping("first-sign-in")
-    public int firstSignIn (String username, String password) {
-        return persist.isFirstSignIn(username, password);
+    public boolean firstSignIn (String token){
+        return persist.isFirstSignIn(token);
     }
 
     @RequestMapping("create-account")
