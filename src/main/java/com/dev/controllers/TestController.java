@@ -84,10 +84,10 @@ public class TestController {
     public List<StoreObject> getAllStores () {return persist.getAllStores();}
 
     //related to sale:
-    /*@RequestMapping("get-sales-by-user")
-    public List<SaleObject> getSalesByUser (String token) {
-        return persist.getSalesByUser(token);
-    }*/
+    @RequestMapping("get-sales-by-user")
+    public boolean doesUserDeserveSale (String token , int saleId) {
+        return persist.doesUserDeserveSale(token,saleId);
+    }
     @RequestMapping("get-all-sales")
     public List<SaleObject> getSaleByStore (int storeId) {
         return persist.getSaleByStore(storeId);

@@ -12,7 +12,7 @@ public class SaleObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "id")
-    private int SaleId;
+    private int saleId;
 
     @Column (name = "start_Date")
     private Date startDate;
@@ -24,30 +24,15 @@ public class SaleObject {
     private String content;
 
     @Column (name = "is_For_All")
-    private boolean isForAll;
-
-    //various sales can be linked to several organizations
-    //in one store there can be different sales to different stores
-    @ManyToMany
-    @JoinTable (name = "Organizations_Sales", joinColumns = {@JoinColumn(name="saleId")},
-            inverseJoinColumns = {@JoinColumn(name = "organizationId")})
-    Set<OrganizationObject> Organizations = new HashSet<>();
+    private int isForAll = 0;
 
     @ManyToOne
     @JoinColumn(name="store_Sale")
     private StoreObject store;
 
     //getters and setters:
-    public int getSaleId() {return SaleId;}
-    public void setSaleId(int saleId) {SaleId = saleId;}
-
-    public Set<OrganizationObject> getOrganizations() {
-        return Organizations;
-    }
-
-    public void setOrganizations(Set<OrganizationObject> organizations) {
-        Organizations = organizations;
-    }
+    public int getSaleId() {return saleId;}
+    public void setSaleId(int saleId) {saleId = saleId;}
 
     public Date getStartDate() {return startDate;}
     public void setStartDate(Date startDate) {this.startDate = startDate;}
@@ -58,8 +43,8 @@ public class SaleObject {
     public String getContent() {return content;}
     public void setContent(String content) {this.content = content;}
 
-    public boolean isForAll() {return isForAll;}
-    public void setForAll(boolean forAll) {isForAll = forAll;}
+    public int isForAll() {return isForAll;}
+    public void setIsForAll(int isForAll) {isForAll = isForAll;}
 
     public StoreObject getStore() {return store;}
     public void setStore(StoreObject store) {this.store = store;}

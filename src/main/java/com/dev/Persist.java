@@ -176,6 +176,28 @@ public class Persist {
         session.close();
         return sales;
     }
+    public boolean doesUserDeserveSale(String token , int saleId) {
+        Session session= sessionFactory.openSession();
+        StoreObject store = (StoreObject) session.createQuery("SELECT store FROM SaleObject s WHERE s.saleId=:saleId")
+                .setParameter("saleId",saleId)
+                .uniqueResult();
+        session.close();
+        return doseStoreBelongToUser(token, store.getStoreId());
+    }
+
+    private boolean doseStoreBelongToUser(String token, int storeId) {
+        List<OrganizationObject> organization = null;
+        Session session= sessionFactory.openSession();
+         organization = (List<OrganizationObject>)session.createQuery("SELECT organizations FROM OrganizationStore o WHERE o.store.storeId=:storeId")
+                .setParameter("storeId",storeId)
+                .uniqueResult();
+        session.close();
+        if (organization!=null){
+            return true;
+        }else{
+            return true;
+        }
+    }
 
     //get sale by store:
     public List<SaleObject> getSaleByStore(int storeId) {
@@ -245,5 +267,6 @@ public class Persist {
             session.close();
 
     }
+
 
 }
