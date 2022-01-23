@@ -31,6 +31,11 @@ public class UserOrganizations {
     }
     public UserOrganizations() {}
 
+    public UserOrganizations(Object organizationByOrganizationId, UserObject userByToken) {
+        this.organizations = organizations;
+        this.userObject = userObject;
+    }
+
     //getters and setters:
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
