@@ -90,10 +90,9 @@ public class TestController {
 
     //related to sale:
     @RequestMapping("get-sales-by-user")
-    public boolean doesUserDeserveSale (String token ) {
-        return persist.doesUserDeserveSale(token,saleId);
+    public List<SaleObject> getSalesByUser (String token) {
+        return persist.getSalesByUser(token);
     }
-
     @RequestMapping("get-all-sales")
     public List<SaleObject> getAllSales () {
         return persist.getAllSales();

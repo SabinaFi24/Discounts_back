@@ -237,6 +237,22 @@ public class Persist {
         session.close();
         return saleObjects;
     }
+    //get all sales related to user:
+    public List<SaleObject> getSalesByUser(String token) {
+        Session session = sessionFactory.openSession();
+        List<SaleObject> sales = new ArrayList<>();
+        List<OrganizationObject> organizations = getOrganizationByUser(token);
+
+        for (OrganizationObject organization : organizations ){
+            List<StoreObject> stores = getStoresByOrganization(organization.getOrganizationId());
+            for (StoreObject store : stores) {
+                sales.addAll(getSalesByStoreId(store.getStoreId()));
+            }
+
+        }
+        session.close();
+        return sales;
+    }
     //end of sale.
 
     //settings:
@@ -294,6 +310,7 @@ public class Persist {
             session.close();
 
     }
+
 
 
 }
