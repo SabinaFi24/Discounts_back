@@ -90,7 +90,7 @@ public class TestController {
 
     //related to sale:
     @RequestMapping("get-sales-by-user")
-    public boolean doesUserDeserveSale (String token , int saleId) {
+    public boolean doesUserDeserveSale (String token ) {
         return persist.doesUserDeserveSale(token,saleId);
     }
 
