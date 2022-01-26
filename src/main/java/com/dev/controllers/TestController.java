@@ -83,20 +83,30 @@ public class TestController {
     @RequestMapping("get-all-stores")
     public List<StoreObject> getAllStores () {return persist.getAllStores();}
 
+    @RequestMapping(value = "get-store-name-by-store-id")
+    public String getStoreNameByStoreId (int storeId){
+        return persist.getStoreNameByStoreId(storeId);
+    }
+
     //related to sale:
     @RequestMapping("get-sales-by-user")
     public boolean doesUserDeserveSale (String token , int saleId) {
         return persist.doesUserDeserveSale(token,saleId);
     }
+
     @RequestMapping("get-all-sales")
-    public List<SaleObject> getSaleByStore (int storeId) {
-        return persist.getSaleByStore(storeId);
+    public List<SaleObject> getAllSales () {
+        return persist.getAllSales();
     }
+
     @RequestMapping("settings-change")
     public boolean settingsChange(String token,int organizationId){
         return persist.settingChange(token,organizationId);
     }
-
+    @RequestMapping(value = "get-sales-by-store-id")
+    public List<SaleObject> getSalesByStoreIdStoreId (int storeId){
+        return persist.getSalesByStoreId(storeId);
+    }
 
 
 

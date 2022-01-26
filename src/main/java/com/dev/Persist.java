@@ -165,6 +165,16 @@ public class Persist {
         session.close();
         return storesObjects;
     }
+    public String getStoreNameByStoreId(int storeId){
+        Session session = sessionFactory.openSession();
+        String storeName = null;
+        storeName = String.valueOf((session.createQuery(" SELECT name FROM store WHERE store.id = : storeId ")
+                .setParameter("storeId", storeId)));
+
+        session.close();
+        return storeName;
+    }
+
     //end of store.
 
     //related to SALE:
@@ -200,7 +210,7 @@ public class Persist {
     }
 
     //get sale by store:
-    public List<SaleObject> getSaleByStore(int storeId) {
+    public List<SaleObject> getSalesByStoreId(int storeId) {
         List<SaleObject> saleObjects = null;
         Session session = sessionFactory.openSession();
         saleObjects = (List<SaleObject>)session.createQuery(
