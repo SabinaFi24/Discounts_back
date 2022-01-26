@@ -180,7 +180,7 @@ public class Persist {
         String name = null;
         Session session = sessionFactory.openSession();
         StoreObject storeObject = (StoreObject) session.createQuery
-                        ("FROM StoreObject WHERE id = :storeId")
+                        ("FROM StoreObject WHERE StoreObject.id = :storeId")
                 .setParameter("storeId", storeId)
                 .uniqueResult();
         session.close();

@@ -85,7 +85,7 @@ public class TestController {
 
     @RequestMapping(value = "get-store-name-by-store-id")
     public String getStoreNameByStoreId (int storeId){
-        return persist.getStoreNameByStoreId(storeId);
+        return persist.getStoreByStoreId(storeId).getName();
     }
 
     //related to sale:
