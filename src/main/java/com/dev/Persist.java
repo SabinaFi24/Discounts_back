@@ -146,7 +146,8 @@ public class Persist {
     //end of organizations.
 
     //related to STORE:
-    // get all the Stores that exist
+
+    // get all the Stores that exist:
     public List<StoreObject> getAllStores (){
         List<StoreObject> stores = null;
         Session session = sessionFactory.openSession();
@@ -154,7 +155,7 @@ public class Persist {
         session.close();
         return stores;
     }
-
+    //get store by organization:
     public List<StoreObject> getStoresByOrganization(int organizationId) {
         List<StoreObject> storesObjects = null;
         Session session = sessionFactory.openSession();
@@ -165,14 +166,28 @@ public class Persist {
         session.close();
         return storesObjects;
     }
-    public String getStoreNameByStoreId(int storeId){
+    //get store by id:
+    public StoreObject getStoreByStoreId(int storeId){
         Session session = sessionFactory.openSession();
-        String storeName = null;
-        storeName = String.valueOf((session.createQuery(" SELECT name FROM store WHERE store.id = : storeId ")
-                .setParameter("storeId", storeId)));
-
+        StoreObject store = (StoreObject) session.createQuery("FROM StoreObject  WHERE id =:storeId")
+                .setParameter("storeId",storeId)
+                .uniqueResult();
         session.close();
-        return storeName;
+        return store;
+    }
+    //get store name by store id:
+    public String getStoreNameByStoreId(int storeId){
+        String name = null;
+        Session session = sessionFactory.openSession();
+        StoreObject storeObject = (StoreObject) session.createQuery
+                        ("FROM StoreObject WHERE id = :storeId")
+                .setParameter("storeId", storeId)
+                .uniqueResult();
+        session.close();
+        if (storeObject != null) {
+            name = storeObject.getName();
+        }
+        return name;
     }
 
     //end of store.
@@ -186,6 +201,7 @@ public class Persist {
         session.close();
         return sales;
     }
+    // does the store has the sale:
     public boolean doesUserDeserveSale(String token , int saleId) {
         Session session= sessionFactory.openSession();
         StoreObject store = (StoreObject) session.createQuery("SELECT store FROM SaleObject s WHERE s.saleId=:saleId")
@@ -194,7 +210,7 @@ public class Persist {
         session.close();
         return doseStoreBelongToUser(token, store.getStoreId());
     }
-
+    //does user friend in organization that work with the store that has the sale:
     private boolean doseStoreBelongToUser(String token, int storeId) {
         List<OrganizationObject> organization = null;
         Session session= sessionFactory.openSession();
@@ -267,6 +283,7 @@ public class Persist {
         transaction.commit();
         session.close();
     }
+    //add the organization to the userOrganization relationship:
     public void addUserToOrganization(String token, int organizationId){
             Session session = sessionFactory.openSession();
             Transaction transaction = session.beginTransaction();

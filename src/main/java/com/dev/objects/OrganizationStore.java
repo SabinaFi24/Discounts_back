@@ -1,10 +1,8 @@
 package com.dev.objects;
-
 import javax.persistence.*;
 
     @Entity
-    @Table( name = "Store_Organizations")
-
+    @Table( name = "organizations_store")
     public class OrganizationStore {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
