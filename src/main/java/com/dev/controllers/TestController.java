@@ -6,6 +6,7 @@ import com.dev.objects.SaleObject;
 import com.dev.objects.StoreObject;
 import com.dev.objects.UserObject;
 import com.dev.utils.FileBrowserUtil;
+import com.dev.utils.MessagesHandler;
 import com.dev.utils.Utils;
 import org.hibernate.engine.jdbc.StreamUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,12 @@ public class TestController {
 
     @Autowired
     private Persist persist;
+    private MessagesHandler messagesHandler;
+
+    public TestController(MessagesHandler messagesHandler) {
+        this.messagesHandler = messagesHandler;
+    }
+
 
     @PostConstruct
     private void init () {
@@ -107,6 +114,19 @@ public class TestController {
         return persist.getSalesByStoreId(id);
     }
 
+    @RequestMapping(value = "get-start-sales")
+    public List<Sale> getStartSales (){
+        return persist.getStartSales();
+    }
+
+    @RequestMapping(value = "get-users-to-send-start-sales")
+    public List<UserObject> getUsersToSendStartSales (){
+        return persist.getUsersToSendStartSales();
+    }
+    @RequestMapping(value = "get-users-to-send-end-sales")
+    public List<UserObject> getUsersToSendEndSales (){
+        return persist.getUsersToSendEndSales();
+    }
 
 
 
