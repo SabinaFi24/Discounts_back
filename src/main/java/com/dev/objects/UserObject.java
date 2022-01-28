@@ -11,7 +11,7 @@ public class UserObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "id")
-    public int userId;
+    public int id;
 
     @Column (name = "username")
     private String username;
@@ -36,8 +36,8 @@ public class UserObject {
     public String getToken() {return token;}
     public void setToken(String token) {this.token = token;}
 
-    public int getUserId() {return userId;}
-    public void setUserId(int userId) {this.userId = userId;}
+    public int getUserId() {return id;}
+    public void setUserId(int id) {this.id = id;}
 
     public int getFirstLogIn() {return firstLogIn;}
     public void setFirstLogIn(int firstLogIn) {this.firstLogIn = firstLogIn;}

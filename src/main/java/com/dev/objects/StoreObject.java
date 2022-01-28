@@ -9,7 +9,7 @@ public class StoreObject {
     @Id//the id of the table (primary key)
     @GeneratedValue(strategy = GenerationType.IDENTITY)//auto increment
     @Column (name = "id")
-    private int storeId;
+    private int id;
 
     @Column (name = "name")
     private String name;
@@ -17,8 +17,8 @@ public class StoreObject {
     @Transient//not saved in database
     private List<SaleObject> sales;
 
-    public int getStoreId() {return storeId;}
-    public void setStoreId(int storeId) {this.storeId = storeId;}
+    public int getStoreId() {return id;}
+    public void setStoreId(int id) {this.id = id;}
 
     public String getName() {return name;}
     public void setName(String name) {this.name = name;}

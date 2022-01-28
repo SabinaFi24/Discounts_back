@@ -128,16 +128,16 @@ public class Persist {
     public List<OrganizationObject> getOrganizationByUser (String token) {
         List<OrganizationObject> OrganizationObjects = null;
         Session session = sessionFactory.openSession();
-        OrganizationObjects = session.createQuery("SELECT organizations FROM UserOrganizations WHERE UserObject.userId = :userId")
-                .setParameter("userId",getUserByToken(token).getUserId())
+        OrganizationObjects = session.createQuery("SELECT organizations FROM UserOrganizations WHERE UserObject.id = :id")
+                .setParameter("id",getUserByToken(token).getUserId())
                 .list();
         session.close();
         return OrganizationObjects;
     }
-    private Object getOrganizationByOrganizationId(int organizationId) {
+    private Object getOrganizationByOrganizationId(int id) {
         Session session = sessionFactory.openSession();
-        OrganizationObject organizationObject = (OrganizationObject) session.createQuery("FROM OrganizationObject o WHERE o.organizationId = :organizationId")
-                .setParameter("organizationId",organizationId)
+        OrganizationObject organizationObject = (OrganizationObject) session.createQuery("FROM OrganizationObject o WHERE o.id = :id")
+                .setParameter("id",id)
                 .uniqueResult();
         session.close();
         return organizationObject;
@@ -156,32 +156,32 @@ public class Persist {
         return stores;
     }
     //get store by organization:
-    public List<StoreObject> getStoresByOrganization(int organizationId) {
+    public List<StoreObject> getStoresByOrganization(int id) {
         List<StoreObject> storesObjects = null;
         Session session = sessionFactory.openSession();
         storesObjects = (List<StoreObject>)session.createQuery(
-                        "FROM StoreObject WHERE OrganizationObject.organizationId = :organizationId")
-                .setParameter("organizationId", organizationId)
+                        "FROM StoreObject WHERE OrganizationObject.id = :id")
+                .setParameter("id", id)
                 .list();
         session.close();
         return storesObjects;
     }
     //get store by id:
-    public StoreObject getStoreByStoreId(int storeId){
+    public StoreObject getStoreByStoreId(int id){
         Session session = sessionFactory.openSession();
-        StoreObject store = (StoreObject) session.createQuery("FROM StoreObject  WHERE id =:storeId")
-                .setParameter("storeId",storeId)
+        StoreObject store = (StoreObject) session.createQuery("FROM StoreObject  WHERE id =:id")
+                .setParameter("id",id)
                 .uniqueResult();
         session.close();
         return store;
     }
     //get store name by store id:
-    public String getStoreNameByStoreId(int storeId){
+    public String getStoreNameByStoreId(int id){
         String name = null;
         Session session = sessionFactory.openSession();
         StoreObject storeObject = (StoreObject) session.createQuery
-                        ("FROM StoreObject WHERE StoreObject.id = :storeId")
-                .setParameter("storeId", storeId)
+                        ("FROM StoreObject WHERE StoreObject.id = :id")
+                .setParameter("id", id)
                 .uniqueResult();
         session.close();
         if (storeObject != null) {
@@ -197,25 +197,26 @@ public class Persist {
     public List<SaleObject> getAllSales (){
         List<SaleObject> sales = null;
         Session session = sessionFactory.openSession();
-        sales = (List<SaleObject>)session.createQuery( "FROM SaleObject").list();
+        sales = (List<SaleObject>)session.createQuery
+                ( "FROM SaleObject").list();
         session.close();
         return sales;
     }
     // does the store has the sale:
-    public boolean doesUserDeserveSale(String token , int saleId) {
+    public boolean doesUserDeserveSale(String token , int id) {
         Session session= sessionFactory.openSession();
-        StoreObject store = (StoreObject) session.createQuery("SELECT store FROM SaleObject s WHERE s.saleId=:saleId")
-                .setParameter("saleId",saleId)
+        StoreObject store = (StoreObject) session.createQuery("SELECT store FROM SaleObject s WHERE s.id=:id")
+                .setParameter("id",id)
                 .uniqueResult();
         session.close();
         return doseStoreBelongToUser(token, store.getStoreId());
     }
     //does user friend in organization that work with the store that has the sale:
-    private boolean doseStoreBelongToUser(String token, int storeId) {
+    private boolean doseStoreBelongToUser(String token, int id) {
         List<OrganizationObject> organization = null;
         Session session= sessionFactory.openSession();
-         organization = (List<OrganizationObject>)session.createQuery("SELECT organizations FROM OrganizationStore o WHERE o.store.storeId=:storeId")
-                .setParameter("storeId",storeId)
+         organization = (List<OrganizationObject>)session.createQuery("SELECT organizations FROM OrganizationStore o WHERE o.store.id=:id")
+                .setParameter("id",id)
                 .uniqueResult();
         session.close();
         if (organization!=null){
@@ -226,13 +227,13 @@ public class Persist {
     }
 
     //get sale by store:
-    public List<SaleObject> getSalesByStoreId(int storeId) {
+    public List<SaleObject> getSalesByStoreId(int id) {
         List<SaleObject> saleObjects = null;
         Session session = sessionFactory.openSession();
         saleObjects = (List<SaleObject>)session.createQuery(
                         "FROM SaleObject " +
-                                "WHERE SaleObject.store.storeId = :storeId")
-                .setParameter("storeId", storeId)
+                                "WHERE SaleObject.store.id = :id")
+                .setParameter("id", id)
                 .list();
         session.close();
         return saleObjects;

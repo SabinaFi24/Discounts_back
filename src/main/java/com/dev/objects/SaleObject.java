@@ -12,7 +12,7 @@ public class SaleObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "id")
-    private int saleId;
+    private int id;
 
     @Column (name = "start_Date")
     private Date startDate;
@@ -24,15 +24,15 @@ public class SaleObject {
     private String content;
 
     @Column (name = "is_For_All")
-    private int isForAll = 0;
+    private int isForAll;
 
     @ManyToOne
     @JoinColumn(name="store_Sale")
     private StoreObject store;
 
     //getters and setters:
-    public int getSaleId() {return saleId;}
-    public void setSaleId(int saleId) {saleId = saleId;}
+    public int getSaleId() {return id;}
+    public void setSaleId(int id) {id = id;}
 
     public Date getStartDate() {return startDate;}
     public void setStartDate(Date startDate) {this.startDate = startDate;}

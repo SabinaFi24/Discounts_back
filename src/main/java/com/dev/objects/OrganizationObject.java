@@ -10,15 +10,15 @@ import java.util.Set;
 public class OrganizationObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "organizationId")
-    private int organizationId;
+    @Column (name = "id")
+    private int id;
 
     @Column (name = "name")
     private String name;
 
     //getters and setters:
-    public int getOrganizationId() {return organizationId;}
-    public void setOrganizationId(int organizationId) {organizationId = organizationId;}
+    public int getOrganizationId() {return id;}
+    public void setOrganizationId(int id) {id = id;}
 
     public String getName() {return name;}
     public void setName(String name) {this.name = name;}
