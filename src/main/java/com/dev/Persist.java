@@ -9,8 +9,11 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
+
 
 @Component
 public class Persist {
@@ -75,7 +78,7 @@ public class Persist {
 
     public boolean isFirstSignIn(String token) {
         UserObject userObject = getUserByToken(token);
-        if (userObject.getFirstLogIn() == 0) {;
+        if (userObject.getFirstLogIn() == 0) {
             return true;
         } else {
             return false;
@@ -92,6 +95,8 @@ public class Persist {
         session.close();
     }
 
+    //RELATED TO USER:
+    //get user id by token:
     public Integer getUserIdByToken (String token) {
         Integer id = null;
         Session session = sessionFactory.openSession();
@@ -105,6 +110,7 @@ public class Persist {
         return id;
 
     }
+    //get user object by token
     public UserObject getUserByToken (String token ){
         Session session = sessionFactory.openSession();
         UserObject userObject = (UserObject) session.createQuery("FROM UserObject u WHERE u.token = :token")
@@ -114,13 +120,32 @@ public class Persist {
         return userObject;
     }
 
+    //get user object by organization id:
+    public List<UserObject> getUserByOrganizationId(int organizationId){
+        Session session = sessionFactory.openSession();
+        List<UserObject> userObjectList = sessionFactory.openSession().createQuery
+                        ("SELECT UserObject FROM UserOrganizations u WHERE u.organizations.id=:id")
+                .setParameter("id",organizationId)
+                .list();
+        session.close();
+        return userObjectList;
+    }
+    //get all users:
+    public List<UserObject> getAllUsers (){
+        Session session = sessionFactory.openSession();
+        List<UserObject> users = (List<UserObject>)session.createQuery( "FROM UserObject").list();
+        session.close();
+        return users;
+    }
+    //end of USER.
+
     //related to ORGANIZATIONS:
     // get all organizations:
     public List<OrganizationObject> getAllOrganizations () {
         List<OrganizationObject> OrganizationObjects = null;
         Session session = sessionFactory.openSession();
         OrganizationObjects = (List<OrganizationObject>)session.createQuery( "FROM OrganizationObject").list();
-        session.close();
+       // session.close();
         return OrganizationObjects;
     }
 
@@ -134,6 +159,7 @@ public class Persist {
         session.close();
         return OrganizationObjects;
     }
+    //get organization object by organization id:
     private Object getOrganizationByOrganizationId(int id) {
         Session session = sessionFactory.openSession();
         OrganizationObject organizationObject = (OrganizationObject) session.createQuery("FROM OrganizationObject o WHERE o.id = :id")
@@ -143,11 +169,27 @@ public class Persist {
         return organizationObject;
     }
 
+    //dose store belong to organization
+    public boolean doseStoreBelongToOrganization (int storeId , int organizationId){
+        Session session = sessionFactory.openSession();
+        OrganizationObject organizations=(OrganizationObject)session
+                .createQuery("SELECT organizations FROM OrganizationStore o WHERE o.store.id =:storeId AND o.organizations.id =:organizationId")
+                .setParameter("storeId",storeId)
+                .setParameter("organizationId",organizationId)
+                .uniqueResult();
+        session.close();
+        if (organizations!=null)
+        {
+            return true;
+        }else {
+            return false;
+        }
+
+    }
     //end of organizations.
 
-    //related to STORE:
-
-    // get all the Stores that exist:
+    //RELATED TO STORE:
+    // get all the Stores:
     public List<StoreObject> getAllStores (){
         List<StoreObject> stores = null;
         Session session = sessionFactory.openSession();
@@ -189,44 +231,45 @@ public class Persist {
         }
         return name;
     }
-
     //end of store.
 
     //related to SALE:
     //get all sales:
     public List<SaleObject> getAllSales (){
-        List<SaleObject> sales = null;
         Session session = sessionFactory.openSession();
-        sales = (List<SaleObject>)session.createQuery
+        List<SaleObject> sales = (List<SaleObject>)session.createQuery
                 ( "FROM SaleObject").list();
         session.close();
         return sales;
     }
     // does the store has the sale:
+    //does user deserve sale:
     public boolean doesUserDeserveSale(String token , int id) {
         Session session= sessionFactory.openSession();
-        StoreObject store = (StoreObject) session.createQuery("SELECT store FROM SaleObject s WHERE s.id=:id")
+        StoreObject store = (StoreObject) session.createQuery
+                        ("SELECT store FROM SaleObject s WHERE s.id=:id")
                 .setParameter("id",id)
                 .uniqueResult();
         session.close();
         return doseStoreBelongToUser(token, store.getStoreId());
     }
+
     //does user friend in organization that work with the store that has the sale:
+    //does store belong to user:
     private boolean doseStoreBelongToUser(String token, int id) {
-        List<OrganizationObject> organization = null;
         Session session= sessionFactory.openSession();
-         organization = (List<OrganizationObject>)session.createQuery("SELECT organizations FROM OrganizationStore o WHERE o.store.id=:id")
+        List<OrganizationObject> organization = (List<OrganizationObject>)session.createQuery
+                         ("SELECT organizations FROM OrganizationStore o WHERE o.store.id=:id")
                 .setParameter("id",id)
                 .uniqueResult();
         session.close();
-        if (organization!=null){
-            return true;
-        }else{
-            return true;
+        for(OrganizationObject organizations:organization) {
+            return doseUserInOrganization(token, organizations.getOrganizationId());
         }
+        return false;
     }
 
-    //get sale by store:
+    //get sale by store id:
     public List<SaleObject> getSalesByStoreId(int id) {
         List<SaleObject> saleObjects = null;
         Session session = sessionFactory.openSession();
@@ -238,7 +281,8 @@ public class Persist {
         session.close();
         return saleObjects;
     }
-    //get all sales related to user:
+
+    //get all sales related to user by user token:
     public List<SaleObject> getSalesByUser(String token) {
         Session session = sessionFactory.openSession();
         List<SaleObject> sales = new ArrayList<>();
@@ -254,9 +298,35 @@ public class Persist {
         session.close();
         return sales;
     }
+    //get start date of sale:
+    public List<SaleObject> getStartDate(){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date date = new Date();
+        String currentDate = formatter.format(date);
+        Session session = sessionFactory.openSession();
+        List <SaleObject> sales = session.createQuery("FROM SaleObject s WHERE s.startDate=:currentDate")
+                .setParameter("currentDate",currentDate)
+                .list();
+        session.close();
+        return sales;
+    }
+    //get end date for sale:
+    public List<SaleObject> getEndDate(){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date date = new Date();
+        String currentDate = formatter.format(date);
+        Session session = sessionFactory.openSession();
+        List <SaleObject> sales = session.createQuery("FROM SaleObject s WHERE s.endDate=:currentDate ")
+                .setParameter("currentDate",currentDate)
+                .list();
+        session.close();
+        return sales;
+    }
+
     //end of sale.
 
-    //settings:
+    //SETTINGS:
+    //change settings:
     public boolean settingChange(String token, int organizationId){
         //there is such user:
         if (getUserByToken(token) != null) {
@@ -272,11 +342,11 @@ public class Persist {
         }
         return false;
     }
+
     //does the user is friend in organization:
     public boolean doseUserInOrganization(String token, int organizationId){
-        List<OrganizationObject> organizations = null;
         Session session = sessionFactory.openSession();
-        organizations = (List<OrganizationObject>)session.createQuery(
+        List<OrganizationObject> organizations  = (List<OrganizationObject>)session.createQuery(
                 "SELECT organizations FROM UserOrganizations u WHERE u.userObject.id =:userId " +
                         "AND u.organizations.id =:organizationId")
                 .setParameter("userId",getUserByToken(token).getUserId())
@@ -289,6 +359,7 @@ public class Persist {
             return false;
         }
     }
+
     // remove users friendship:
     public void removeUserFromOrganization (String token, int organizationId) {
         Session session = sessionFactory.openSession();
@@ -310,6 +381,16 @@ public class Persist {
             transaction.commit();
             session.close();
 
+    }
+
+    //Delete multiple users:
+    public List<UserObject> removeIfMultipleUsers(List<UserObject> userObjectList){
+        List<UserObject> newList = new ArrayList<>();
+        for (UserObject userObject : userObjectList){
+            if (!newList.contains(userObject))
+                newList.add(userObject);
+        }
+        return newList;
     }
 
 

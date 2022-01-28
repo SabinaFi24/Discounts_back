@@ -1,9 +1,9 @@
 package com.dev;
 
-import com.dev.objects.OrganizationObject;
 import com.dev.objects.SaleObject;
 import com.dev.objects.StoreObject;
 import com.dev.objects.UserObject;
+import com.dev.objects.OrganizationObject;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Environment;

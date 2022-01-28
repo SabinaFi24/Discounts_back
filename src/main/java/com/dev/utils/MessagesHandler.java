@@ -37,7 +37,8 @@ public class MessagesHandler extends TextWebSocketHandler {
         new Thread(() -> {
             while (true) {
                 try {
-                    sendToEveryone();
+                    sendStartSale();
+                    sendEndDate();
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -71,7 +72,7 @@ public class MessagesHandler extends TextWebSocketHandler {
         System.out.println("afterConnectionClosed");
     }
 
-    public void sendToEveryone () {
+    /*public void sendToEveryone () {
         for (WebSocketSession session : sessionList) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("test", String.valueOf(System.currentTimeMillis()));
@@ -81,59 +82,56 @@ public class MessagesHandler extends TextWebSocketHandler {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     public void sendStartSale() {
-        List<SaleObject> startSales = persist.getStartSales();
+        List<SaleObject> startDates = persist.getStartDate();
         List<UserObject> userObjects = null;
         List<OrganizationObject> organizations = persist.getAllOrganizations();
-        String sOe="Starting";
-        if (startSales != null) {
+        if (startDates != null) {
             for (SaleObject start : startSales) {
-                if (start.getAvailableForAll() != 1) {
+                if (start.isForAll() != 1) {
                     for (OrganizationObject organization : organizations) {
                         if (persist.doseStoreBelongToOrganization(start.getStore().getStoreId(), organization.getOrganizationId())) {
                             userObjects = persist.getUserByOrganizationId(organization.getOrganizationId());
-                            sender(userObjects,start,sOe);}}
+                            sender(userObjects,start);}}
                 }else {
                     userObjects= persist.getAllUsers();
-                    sender(userObjects,start,sOe);}
+                    sender(userObjects,start);}
             }
         } else {
-            System.out.println("no start sale now");
+            System.out.println("no sale is starting now");
         }
     }
 
 
-    public void sendEndSale() {
-        List<SaleObject> endSales = persist.getEndSales();
+    public void sendEndDate() {
+        List<SaleObject> endDates = persist.getEndDate();
         List<UserObject> userObjects = null;
         List<OrganizationObject> organizations = persist.getAllOrganizations();
-        String sOe="Expired";
-        if (endSales != null) {
-            for (SaleObject end : endSales) {
-                if (end.getAvailableForAll() != 1) {
+        if (endDates != null) {
+            for (SaleObject end : endDates) {
+                if (end.isForAll() != 1) {
                     for (OrganizationObject organization : organizations) {
                         if (persist.doseStoreBelongToOrganization(end.getStore().getStoreId(), organization.getOrganizationId())) {
                             userObjects = persist.getUserByOrganizationId(organization.getOrganizationId());
-                            sender(userObjects,end,sOe);
+                            sender(userObjects,end);
                         }
                     }
                 }else { userObjects= persist.getAllUsers();
-                    sender(userObjects,end,sOe);}
+                    sender(userObjects,end);}
             }
         } else {
-            System.out.println("no end sale now");
+            System.out.println("There is no sales ending today");
         }
     }
 
-    public void sender(List<UserObject> userObjects,SaleObject sale,String sOe){
-        List<UserObject> userObjectList=persist.removeDoubleUsers(userObjects);
+    public void sender(List<UserObject> userObjects,SaleObject sale){
+        List<UserObject> userObjectList=persist.removeIfMultipleUsers(userObjects);
         try {
             if (userObjectList != null) {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("saleText", sale.getSaleText());
-                jsonObject.put("sOe", sOe);
+                jsonObject.put("saleText", sale.getContent());
                 for (UserObject userObject : userObjectList) {
                     sessionList.add(sessionMap.get(userObject.getToken()));
                     if (sessionMap.get(userObject.getToken()) != null)
