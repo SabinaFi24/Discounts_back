@@ -79,13 +79,13 @@ public class TestController {
 
     //related to store:
     @RequestMapping("get-stores-by-organization")
-    public List<StoreObject> getStoresByOrganization (int organizationId) {return persist.getStoresByOrganization(organizationId);}
+    public List<StoreObject> getStoresByOrganization (int id) {return persist.getStoresByOrganization(id);}
     @RequestMapping("get-all-stores")
     public List<StoreObject> getAllStores () {return persist.getAllStores();}
 
     @RequestMapping(value = "get-store-name-by-store-id")
-    public String getStoreNameByStoreId (int storeId){
-        return persist.getStoreByStoreId(storeId).getName();
+    public String getStoreNameByStoreId (int id){
+        return persist.getStoreByStoreId(id).getName();
     }
 
     //related to sale:
@@ -99,12 +99,12 @@ public class TestController {
     }
 
     @RequestMapping("settings-change")
-    public boolean settingsChange(String token,int organizationId){
-        return persist.settingChange(token,organizationId);
+    public boolean settingsChange(String token,int id){
+        return persist.settingChange(token,id);
     }
     @RequestMapping(value = "get-sales-by-store-id")
-    public List<SaleObject> getSalesByStoreIdStoreId (int storeId){
-        return persist.getSalesByStoreId(storeId);
+    public List<SaleObject> getSalesByStoreIdStoreId (int id){
+        return persist.getSalesByStoreId(id);
     }
 
 
