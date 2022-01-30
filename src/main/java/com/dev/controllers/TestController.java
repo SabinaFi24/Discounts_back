@@ -101,6 +101,15 @@ public class TestController {
     public boolean settingsChange(String token,int id){
         return persist.settingChange(token,id);
     }
+    @RequestMapping(value = "/add-user-to-organization", method = RequestMethod.POST)
+    public void addUserToOrganization(String token, int organizationId) {
+        persist.addUserToOrganization(token, organizationId);
+    }
+
+    @RequestMapping(value = "/remove-user-from-organization", method = RequestMethod.POST)
+    public void removeUserFromOrganization(String token, int organizationId) {
+        persist.removeUserFromOrganization(token, organizationId);
+    }
 
     @RequestMapping(value = "get-sales-by-store-id")
     public List<SaleObject> getSalesByStoreIdStoreId (int id){

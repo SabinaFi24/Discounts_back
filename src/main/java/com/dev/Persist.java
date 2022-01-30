@@ -10,8 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.Date;
 
 
@@ -72,7 +71,7 @@ public class Persist {
         session.saveOrUpdate(userObject);
         transaction.commit();
         session.close();
-        if (userObject.getUserId() > 0) {
+        if (userObject.getId() > 0) {
             success = true;
         }
         return success;
@@ -107,7 +106,7 @@ public class Persist {
                 .uniqueResult();
         session.close();
         if (userObject != null) {
-            id = userObject.getUserId();
+            id = userObject.getId();
         }
         return id;
 
@@ -125,7 +124,8 @@ public class Persist {
     //get user object by organization id:
     public List<UserObject> getUserByOrganizationId(int organizationId){
         Session session = sessionFactory.openSession();
-        List<UserObject> userObjectList = sessionFactory.openSession().createQuery
+        List<UserObject> userObjectList;
+        userObjectList = session.createQuery
                         ("SELECT UserObject FROM UserOrganizations u WHERE u.organizations.id=:id")
                 .setParameter("id",organizationId)
                 .list();
@@ -144,24 +144,22 @@ public class Persist {
     //related to ORGANIZATIONS:
     // get all organizations:
     public List<OrganizationObject> getAllOrganizations () {
-        List<OrganizationObject> OrganizationObjects = null;
         Session session = sessionFactory.openSession();
-        OrganizationObjects = (List<OrganizationObject>)session.createQuery
+        List<OrganizationObject> OrganizationObjects =session.createQuery
                 ( "FROM OrganizationObject").list();
-       // session.close();
+        session.close();
         return OrganizationObjects;
     }
 
     //get organizations by user:
     public List<OrganizationObject> getOrganizationByUser (String token) {
-        List<OrganizationObject> OrganizationObjects = null;
-        Session session = sessionFactory.openSession();
-        OrganizationObjects = session.createQuery
-                        ("SELECT organizations FROM UserOrganizations  WHERE UserObject.id = :id")
-                .setParameter("id",getUserByToken(token).getUserId())
+        Session session =sessionFactory.openSession();
+        List <OrganizationObject> organizations = session.createQuery
+                        ("SELECT organizations FROM UserOrganizations u WHERE u.userObject.id=:id ")
+                .setParameter("id",getUserByToken(token).getId())
                 .list();
         session.close();
-        return OrganizationObjects;
+        return organizations;
     }
     //get organization object by organization id:
     private Object getOrganizationByOrganizationId(int id) {
@@ -183,12 +181,7 @@ public class Persist {
                 .setParameter("organizationId",organizationId)
                 .uniqueResult();
         session.close();
-        if (organizations!=null)
-        {
-            return true;
-        }else {
-            return false;
-        }
+        return organizations != null;
 
     }
     //end of organizations.
@@ -196,7 +189,7 @@ public class Persist {
     //RELATED TO STORE:
     // get all the Stores:
     public List<StoreObject> getAllStores (){
-        List<StoreObject> stores = null;
+        List<StoreObject> stores;
         Session session = sessionFactory.openSession();
         stores = (List<StoreObject>)session.createQuery( "FROM StoreObject").list();
         session.close();
@@ -353,39 +346,35 @@ public class Persist {
         List<OrganizationObject> organizations  = (List<OrganizationObject>)session.createQuery(
                 "SELECT organizations FROM UserOrganizations u WHERE u.userObject.id =:userId " +
                         "AND u.organizations.id =:organizationId")
-                .setParameter("userId",getUserByToken(token).getUserId())
+                .setParameter("userId",getUserByToken(token).getId())
                 .setParameter("organizationId",organizationId)
                 .uniqueResult();
         session.close();
-        if (organizations!=null) {
-            return true;
-        }else {
-            return false;
-        }
+        return organizations != null;
     }
-
     // remove users friendship:
     public void removeUserFromOrganization (String token, int organizationId) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.createQuery
-                        ("DELETE FROM UserOrganizations u WHERE u.userObject.id = :userId " +
-                                "AND u.organizations.id =:organizationId")
-                .setParameter("userId",getUserByToken(token).getUserId())
+        UserOrganizations  organizationUserToDelete = (UserOrganizations) session.createQuery
+                        (" FROM UserOrganizations u where u.userObject.id =:userId AND u.organizations.id =:organizationId")
+                .setParameter("userId",getUserByToken(token).getId())
                 .setParameter("organizationId",organizationId)
-                .executeUpdate();
+                .uniqueResult();
+        UserOrganizations userOrganization = (UserOrganizations) session.load(UserOrganizations.class,organizationUserToDelete.getId());
+        session.delete(userOrganization);
         transaction.commit();
         session.close();
     }
     //add the organization to the userOrganization relationship:
     public void addUserToOrganization(String token, int organizationId){
-            Session session = sessionFactory.openSession();
-            Transaction transaction = session.beginTransaction();
-            UserOrganizations userOrganizations = new UserOrganizations
-                    (getOrganizationByOrganizationId(organizationId),getUserByToken(token));
-            session.save(userOrganizations);
-            transaction.commit();
-            session.close();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        UserOrganizations userOrganization = new UserOrganizations(
+                getOrganizationByOrganizationId(organizationId),getUserByToken(token));
+        session.save(userOrganization);
+        transaction.commit();
+        session.close();
 
     }
 
