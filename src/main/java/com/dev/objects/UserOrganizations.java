@@ -27,6 +27,10 @@ public class UserOrganizations {
         this.organizations = organizations;
         this.userObject = userObject;
     }
+    public UserOrganizations( OrganizationObject organizations, UserObject userObject) {
+        this.organizations = organizations;
+        this.userObject = userObject;
+    }
     public UserOrganizations() {}
 
     public UserOrganizations(Object organizationByOrganizationId, UserObject userByToken) {

@@ -370,8 +370,8 @@ public class Persist {
     public void addUserToOrganization(String token, int organizationId){
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        UserOrganizations userOrganization = new UserOrganizations(
-                getOrganizationByOrganizationId(organizationId),getUserByToken(token));
+        UserOrganizations userOrganization = new UserOrganizations
+                (getOrganizationByOrganizationId(organizationId),getUserByToken(token));
         session.save(userOrganization);
         transaction.commit();
         session.close();
