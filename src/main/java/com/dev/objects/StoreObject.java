@@ -17,12 +17,27 @@ public class StoreObject {
     @Transient//not saved in database
     private List<SaleObject> sales;
 
-    public int getStoreId() {return id;}
-    public void setStoreId(int id) {this.id = id;}
+    public int getId() {
+        return id;
+    }
 
-    public String getName() {return name;}
-    public void setName(String name) {this.name = name;}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public List<SaleObject> getSales() {return sales;}
-    public void setSales(List<SaleObject> sales) {this.sales = sales;}
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<SaleObject> getSales() {
+        return sales;
+    }
+
+    public void setSales(List<SaleObject> sales) {
+        this.sales = sales;
+    }
 }

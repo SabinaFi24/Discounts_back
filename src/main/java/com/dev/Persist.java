@@ -40,7 +40,8 @@ public class Persist {
     public String getTokenByUsernameAndPassword(String username, String password) {
         String token = null;
         Session session = sessionFactory.openSession();
-        UserObject userObject = (UserObject) session.createQuery("FROM UserObject WHERE username = :username AND password = :password")
+        UserObject userObject = (UserObject) session.createQuery
+                        ("FROM UserObject u WHERE u.username = :username AND u.password = :password")
                 .setParameter("username", username)
                 .setParameter("password", password)
                 .uniqueResult();
@@ -53,7 +54,8 @@ public class Persist {
     public String getTokenByUsername(String username) {
         String token = null;
         Session session = sessionFactory.openSession();
-        UserObject userObject = (UserObject) session.createQuery("FROM UserObject WHERE username = :username")
+        UserObject userObject = (UserObject) session.createQuery
+                        ("FROM UserObject u WHERE u.username = :username")
                 .setParameter("username", username)
                 .uniqueResult();
         session.close();
@@ -100,7 +102,7 @@ public class Persist {
     public Integer getUserIdByToken (String token) {
         Integer id = null;
         Session session = sessionFactory.openSession();
-        UserObject userObject = (UserObject) session.createQuery("FROM UserObject WHERE token = :token")
+        UserObject userObject = (UserObject) session.createQuery("FROM UserObject u WHERE u.token = :token")
                 .setParameter("token", token)
                 .uniqueResult();
         session.close();
@@ -144,7 +146,8 @@ public class Persist {
     public List<OrganizationObject> getAllOrganizations () {
         List<OrganizationObject> OrganizationObjects = null;
         Session session = sessionFactory.openSession();
-        OrganizationObjects = (List<OrganizationObject>)session.createQuery( "FROM OrganizationObject").list();
+        OrganizationObjects = (List<OrganizationObject>)session.createQuery
+                ( "FROM OrganizationObject").list();
        // session.close();
         return OrganizationObjects;
     }
@@ -153,7 +156,8 @@ public class Persist {
     public List<OrganizationObject> getOrganizationByUser (String token) {
         List<OrganizationObject> OrganizationObjects = null;
         Session session = sessionFactory.openSession();
-        OrganizationObjects = session.createQuery("SELECT organizations FROM UserOrganizations WHERE UserObject.id = :id")
+        OrganizationObjects = session.createQuery
+                        ("SELECT organizations FROM UserOrganizations  WHERE UserObject.id = :id")
                 .setParameter("id",getUserByToken(token).getUserId())
                 .list();
         session.close();
@@ -162,7 +166,8 @@ public class Persist {
     //get organization object by organization id:
     private Object getOrganizationByOrganizationId(int id) {
         Session session = sessionFactory.openSession();
-        OrganizationObject organizationObject = (OrganizationObject) session.createQuery("FROM OrganizationObject o WHERE o.id = :id")
+        OrganizationObject organizationObject = (OrganizationObject) session.createQuery
+                        ("FROM OrganizationObject o WHERE o.id = :id")
                 .setParameter("id",id)
                 .uniqueResult();
         session.close();
@@ -202,7 +207,7 @@ public class Persist {
         List<StoreObject> storesObjects = null;
         Session session = sessionFactory.openSession();
         storesObjects = (List<StoreObject>)session.createQuery(
-                        "FROM StoreObject WHERE OrganizationObject.id = :id")
+                        "FROM StoreObject s WHERE OrganizationObject.id = :id")
                 .setParameter("id", id)
                 .list();
         session.close();
@@ -222,7 +227,7 @@ public class Persist {
         String name = null;
         Session session = sessionFactory.openSession();
         StoreObject storeObject = (StoreObject) session.createQuery
-                        ("FROM StoreObject WHERE StoreObject.id = :id")
+                        ("FROM StoreObject s WHERE s.id = :id")
                 .setParameter("id", id)
                 .uniqueResult();
         session.close();
@@ -251,7 +256,7 @@ public class Persist {
                 .setParameter("id",id)
                 .uniqueResult();
         session.close();
-        return doseStoreBelongToUser(token, store.getStoreId());
+        return doseStoreBelongToUser(token, store.getId());
     }
 
     //does user friend in organization that work with the store that has the sale:
@@ -274,8 +279,7 @@ public class Persist {
         List<SaleObject> saleObjects = null;
         Session session = sessionFactory.openSession();
         saleObjects = (List<SaleObject>)session.createQuery(
-                        "FROM SaleObject " +
-                                "WHERE SaleObject.store.id = :id")
+                        "FROM SaleObject s WHERE s.store.id = :id")
                 .setParameter("id", id)
                 .list();
         session.close();
@@ -291,7 +295,7 @@ public class Persist {
         for (OrganizationObject organization : organizations ){
             List<StoreObject> stores = getStoresByOrganization(organization.getOrganizationId());
             for (StoreObject store : stores) {
-                sales.addAll(getSalesByStoreId(store.getStoreId()));
+                sales.addAll(getSalesByStoreId(store.getId()));
             }
 
         }
@@ -364,7 +368,9 @@ public class Persist {
     public void removeUserFromOrganization (String token, int organizationId) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.createQuery("DELETE FROM UserOrganizations u WHERE u.userObject.id = :userId AND u.organizations.id =:organizationId")
+        session.createQuery
+                        ("DELETE FROM UserOrganizations u WHERE u.userObject.id = :userId " +
+                                "AND u.organizations.id =:organizationId")
                 .setParameter("userId",getUserByToken(token).getUserId())
                 .setParameter("organizationId",organizationId)
                 .executeUpdate();
@@ -392,7 +398,5 @@ public class Persist {
         }
         return newList;
     }
-
-
 
 }

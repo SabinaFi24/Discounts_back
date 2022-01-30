@@ -92,7 +92,7 @@ public class MessagesHandler extends TextWebSocketHandler {
             for (SaleObject start : startSales) {
                 if (start.isForAll() != 1) {
                     for (OrganizationObject organization : organizations) {
-                        if (persist.doseStoreBelongToOrganization(start.getStore().getStoreId(), organization.getOrganizationId())) {
+                        if (persist.doseStoreBelongToOrganization(start.getStore().getId(), organization.getOrganizationId())) {
                             userObjects = persist.getUserByOrganizationId(organization.getOrganizationId());
                             sender(userObjects,start);}}
                 }else {
@@ -113,7 +113,7 @@ public class MessagesHandler extends TextWebSocketHandler {
             for (SaleObject end : endDates) {
                 if (end.isForAll() != 1) {
                     for (OrganizationObject organization : organizations) {
-                        if (persist.doseStoreBelongToOrganization(end.getStore().getStoreId(), organization.getOrganizationId())) {
+                        if (persist.doseStoreBelongToOrganization(end.getStore().getId(), organization.getOrganizationId())) {
                             userObjects = persist.getUserByOrganizationId(organization.getOrganizationId());
                             sender(userObjects,end);
                         }
@@ -131,7 +131,7 @@ public class MessagesHandler extends TextWebSocketHandler {
         try {
             if (userObjectList != null) {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("saleText", sale.getContent());
+                jsonObject.put("content", sale.getContent());
                 for (UserObject userObject : userObjectList) {
                     sessionList.add(sessionMap.get(userObject.getToken()));
                     if (sessionMap.get(userObject.getToken()) != null)
