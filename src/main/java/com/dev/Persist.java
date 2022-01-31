@@ -295,7 +295,7 @@ public class Persist {
         return sales;
     }
     //get start date of sale:
-    public List<SaleObject> getStartDate(){
+    public List<SaleObject> getStartSales(){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date date = new Date();
         String currentDate = formatter.format(date);
@@ -307,7 +307,7 @@ public class Persist {
         return sales;
     }
     //get end date for sale:
-    public List<SaleObject> getEndDate(){
+    public List<SaleObject> getEndSales(){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date date = new Date();
         String currentDate = formatter.format(date);
@@ -355,7 +355,7 @@ public class Persist {
     public void removeUserFromOrganization (String token, int organizationId) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        UserOrganizations  organizationUserToDelete = (UserOrganizations) session.createQuery
+        UserOrganizations organizationUserToDelete = (UserOrganizations) session.createQuery
                         (" FROM UserOrganizations u where u.userObject.id =:userId AND u.organizations.id =:organizationId")
                 .setParameter("userId",getUserByToken(token).getId())
                 .setParameter("organizationId",organizationId)

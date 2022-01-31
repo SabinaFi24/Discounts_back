@@ -28,8 +28,8 @@ public class MessagesHandler extends TextWebSocketHandler {
     @Autowired
     private Persist persist;
     private List<UserObject> userObjectList;
-    private List<SaleObject> startSales;
-    private List<SaleObject> endSales;
+    private List<SaleObject> startSalesList;
+    private List<SaleObject> endSalesList;
 
     @PostConstruct
 
@@ -37,11 +37,13 @@ public class MessagesHandler extends TextWebSocketHandler {
         new Thread(() -> {
             while (true) {
                 try {
-                    sendStartSale();
-                    sendEndDate();
                     Thread.sleep(10000);
+                    sendStartSale();
+                    sendEndSale();
+                    Thread.sleep(49999);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+
                 }
             }
         }).start();
@@ -85,11 +87,11 @@ public class MessagesHandler extends TextWebSocketHandler {
     }*/
 
     public void sendStartSale() {
-        List<SaleObject> startDates = persist.getStartDate();
+        List<SaleObject> startindSales = persist.getStartSales();
         List<UserObject> userObjects = null;
         List<OrganizationObject> organizations = persist.getAllOrganizations();
-        if (startDates != null) {
-            for (SaleObject start : startSales) {
+        if (startindSales != null) {
+            for (SaleObject start : startSalesList) {
                 if (start.isForAll() != 1) {
                     for (OrganizationObject organization : organizations) {
                         if (persist.doseStoreBelongToOrganization(start.getStore().getId(), organization.getOrganizationId())) {
@@ -105,12 +107,12 @@ public class MessagesHandler extends TextWebSocketHandler {
     }
 
 
-    public void sendEndDate() {
-        List<SaleObject> endDates = persist.getEndDate();
+    public void sendEndSale() {
+        List<SaleObject> endingSales = persist.getEndSales();
         List<UserObject> userObjects = null;
         List<OrganizationObject> organizations = persist.getAllOrganizations();
-        if (endDates != null) {
-            for (SaleObject end : endDates) {
+        if (endingSales != null) {
+            for (SaleObject end : endingSales) {
                 if (end.isForAll() != 1) {
                     for (OrganizationObject organization : organizations) {
                         if (persist.doseStoreBelongToOrganization(end.getStore().getId(), organization.getOrganizationId())) {
