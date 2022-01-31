@@ -27,15 +27,12 @@ public class UserOrganizations {
         this.organizations = organizations;
         this.userObject = userObject;
     }
-    public UserOrganizations( OrganizationObject organizations, UserObject userObject) {
-        this.organizations = organizations;
-        this.userObject = userObject;
-    }
+
     public UserOrganizations() {}
 
-    public UserOrganizations(Object organizationByOrganizationId, UserObject userByToken) {
-        this.organizations = organizations;
-        this.userObject = userObject;
+    public UserOrganizations(OrganizationObject organizationByOrganizationId, UserObject userByToken) {
+        this.organizations = organizationByOrganizationId;
+        this.userObject = userByToken;
     }
 
     //getters and setters:

@@ -162,7 +162,7 @@ public class Persist {
         return organizations;
     }
     //get organization object by organization id:
-    private Object getOrganizationByOrganizationId(int id) {
+    private OrganizationObject getOrganizationByOrganizationId(int id) {
         Session session = sessionFactory.openSession();
         OrganizationObject organizationObject = (OrganizationObject) session.createQuery
                         ("FROM OrganizationObject o WHERE o.id = :id")
