@@ -197,14 +197,13 @@ public class Persist {
     }
     //get store by organization:
     public List<StoreObject> getStoresByOrganization(int id) {
-        List<StoreObject> storesObjects = null;
         Session session = sessionFactory.openSession();
-        storesObjects = (List<StoreObject>)session.createQuery(
-                        "FROM StoreObject s WHERE OrganizationObject.id = :id")
-                .setParameter("id", id)
+        List <StoreObject> stores = session.createQuery
+                        ("SELECT store FROM OrganizationStore o WHERE o.organizations.id=:id")
+                .setParameter("id",id)
                 .list();
         session.close();
-        return storesObjects;
+        return stores;
     }
     //get store by id:
     public StoreObject getStoreByStoreId(int id){

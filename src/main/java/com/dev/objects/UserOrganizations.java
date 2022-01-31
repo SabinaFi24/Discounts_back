@@ -28,11 +28,12 @@ public class UserOrganizations {
         this.userObject = userObject;
     }
 
+
     public UserOrganizations() {}
 
-    public UserOrganizations(OrganizationObject organizationByOrganizationId, UserObject userByToken) {
-        this.organizations = organizationByOrganizationId;
-        this.userObject = userByToken;
+    public UserOrganizations(OrganizationObject organizations, UserObject userObject) {
+        this.organizations = organizations;
+        this.userObject = userObject;
     }
 
     //getters and setters:

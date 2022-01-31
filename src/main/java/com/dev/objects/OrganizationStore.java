@@ -19,6 +19,14 @@ public class OrganizationStore {
     private StoreObject store;
 
     //constructors:
+
+
+    public OrganizationStore(int id, OrganizationObject organizations, StoreObject store) {
+        this.id = id;
+        this.organizations = organizations;
+        this.store = store;
+    }
+
     public OrganizationStore(OrganizationObject organizations, StoreObject store) {
         this.organizations = organizations;
         this.store = store;
